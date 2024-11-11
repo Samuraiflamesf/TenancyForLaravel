@@ -54,7 +54,7 @@ class TenantResource extends Resource
                         ]),
                     Forms\Components\TextInput::make('domain')
                         ->prefix('http://')
-                        ->suffix('.localhost')
+                        ->suffix('/client/login')
                         ->helperText('Ex: cedeba.localhost'),
                 ])
             ]);

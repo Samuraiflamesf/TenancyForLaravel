@@ -15,7 +15,7 @@ class CreateTenant extends CreateRecord
         $tenant = $this->getRecord();
 
         $tenant->domains()->create([
-            'domain' => $this->data['domain'],
+            "domain" => $this->data['domain'],
         ]);
     }
 }
