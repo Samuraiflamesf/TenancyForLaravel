@@ -20,6 +20,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         return [
             'id',
             'name',
+            'name_user',
             'cpf',
             'email',
             'password',

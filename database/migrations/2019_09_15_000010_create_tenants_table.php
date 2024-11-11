@@ -18,6 +18,8 @@ class CreateTenantsTable extends Migration
         Schema::create('tenants', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->string('name');
+            $table->string('name_user')->default('is_default');
+            $table->string('cpf');
             $table->string('email')->unique();
             $table->string('password');
             $table->timestamps();
