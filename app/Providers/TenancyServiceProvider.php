@@ -4,16 +4,19 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Jobs\CreateTenantStorage;
+use Livewire\Livewire;
+use Stancl\Tenancy\Jobs;
+use Stancl\Tenancy\Events;
+use Stancl\Tenancy\Listeners;
 use App\Jobs\CreateTenantUser;
+use Stancl\Tenancy\Middleware;
+use App\Jobs\CreateTenantStorage;
+use Stancl\JobPipeline\JobPipeline;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Stancl\JobPipeline\JobPipeline;
-use Stancl\Tenancy\Events;
-use Stancl\Tenancy\Jobs;
-use Stancl\Tenancy\Listeners;
-use Stancl\Tenancy\Middleware;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Livewire\Features\SupportFileUploads\FilePreviewController;
 
 class TenancyServiceProvider extends ServiceProvider
 {
@@ -107,6 +110,18 @@ class TenancyServiceProvider extends ServiceProvider
         $this->mapRoutes();
 
         $this->makeTenancyMiddlewareHighestPriority();
+
+        Livewire::setUpdateRoute(function ($handle) {
+            return Route::post('/livewire/update', $handle)
+                ->middleware(
+                    'web',
+                    'universal',
+                    InitializeTenancyByDomain::class, // or whatever tenancy middleware you use
+                );
+        });
+
+        // specify the right identification middleware
+        FilePreviewController::$middleware = ['web', 'universal', InitializeTenancyByDomain::class];
     }
 
     protected function bootEvents()
